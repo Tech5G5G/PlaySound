@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="PlaySound.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PlaySound"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:PlaySound.Models"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d"
+    Title="PlaySound">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="SceneDataTemplate" x:DataType="models:Scene">
+                <TextBlock Text="{x:Bind Name}" />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" MinWidth="140" MaxWidth="300" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="TitleBar" Title="PlaySound" />
+
+        <MenuBar Grid.Row="1">
+            <MenuBarItem Title="File" KeyboardAcceleratorPlacementMode="Hidden">
+                <MenuFlyoutItem Text="Open" Command="{x:Bind ViewModel.OpenProductionCommand}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="O" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem Text="Save" Command="{x:Bind ViewModel.SaveCurrentProductionCommand}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="S" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+                <MenuFlyoutItem Text="Save as" Command="{x:Bind ViewModel.SaveProductionCommand}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control,Shift" Key="S" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+                <MenuBarItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Menu" Key="F" />
+                </MenuBarItem.KeyboardAccelerators>
+            </MenuBarItem>
+        </MenuBar>
+
+        <Frame x:Name="ContentFrame" Navigated="OnNavigated" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,1,0" CornerRadius="0,8,0,0" Grid.Row="2" Grid.RowSpan="2" />
+
+        <ListView x:Name="SceneList" ItemsSource="{x:Bind ViewModel.Production.Scenes, Mode=OneWay}" ItemTemplate="{StaticResource SceneDataTemplate}" SelectionChanged="OnSceneChanged" Grid.Column="1" Grid.Row="2" />
+
+        <controls:GridSplitter Grid.Row="2"
+                               Grid.RowSpan="2"
+                               Width="0"
+                               CornerRadius="3"
+                               HorizontalAlignment="Right"
+                               IsThumbVisible="False"
+                               ResizeBehavior="BasedOnAlignment"
+                               ResizeDirection="Auto" />
+
+        <Button HorizontalAlignment="Stretch" Margin="4" Grid.Column="1" Grid.Row="3" ToolTipService.ToolTip="Create a new scene (Ctrl+Alt+Shift+S)" Command="{x:Bind ViewModel.CreateSceneCommand}">
+            <StackPanel Spacing="8" Orientation="Horizontal">
+                <FontIcon Glyph="&#xE710;" FontSize="16" />
+                <TextBlock Text="Create scene" Grid.Column="1" />
+            </StackPanel>
+
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Modifiers="Control,Shift,Menu" Key="S" />
+            </Button.KeyboardAccelerators>
+        </Button>
+    </Grid>
+</Window>
